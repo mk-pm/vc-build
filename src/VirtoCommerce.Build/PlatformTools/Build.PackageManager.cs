@@ -11,6 +11,7 @@ using Nuke.Common.IO;
 using Nuke.Common.Utilities;
 using Nuke.Common.Utilities.Collections;
 using PlatformTools;
+using PlatformTools.Artifactory;
 using PlatformTools.Extensions;
 using PlatformTools.Modules;
 using PlatformTools.Modules.Azure;
@@ -72,6 +73,12 @@ namespace VirtoCommerce.Build
 
         [Parameter("Gitlab Server (default: https://gitlab.com/api/v4)")]
         public static string GitLabServer { get; set; } = "https://gitlab.com/api/v4";
+
+        [Parameter("JFrog Artifactory Username")]
+        public static string JFrogUsername { get; set; }
+
+        [Parameter("JFrog Artifactory Password")]
+        public static string JFrogPassword { get; set; }
 
         [Parameter("Bundle name (default: latest)", Name = "v")]
         public static string BundleName { get; set; } = "latest";
@@ -521,6 +528,7 @@ namespace VirtoCommerce.Build
             AzureBlob _ => new AzureBlobModuleInstaller(AzureSasToken ?? AzureToken, GetDiscoveryPath()),
             GitlabJobArtifacts _ => new GitlabJobArtifactsModuleInstaller(GitLabServer, GitLabToken, GetDiscoveryPath()),
             Local _ => new LocalModuleInstaller(GetDiscoveryPath()),
+            Artifactory => new ArtifactoryModuleInstaller(JFrogUsername, JFrogPassword, GetDiscoveryPath()),
             _ => throw new NotImplementedException("Unknown module source"),
         };
 

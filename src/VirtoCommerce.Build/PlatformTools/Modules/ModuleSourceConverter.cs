@@ -12,7 +12,7 @@ namespace PlatformTools.Modules
 {
     public class ModuleSourceConverter : JsonConverter
     {
-        private static JsonSerializerSettings SpecifiedSubclassConversion = new JsonSerializerSettings() { ContractResolver = new ModuleSourceSpecifiedConcreteClassConverter() };
+        private static JsonSerializerSettings SpecifiedSubclassConversion = new() { ContractResolver = new ModuleSourceSpecifiedConcreteClassConverter() };
 
         public override bool CanConvert(Type objectType)
         {
@@ -27,13 +27,10 @@ namespace PlatformTools.Modules
             {
                 case nameof(GithubReleases):
                     return JsonConvert.DeserializeObject<GithubReleases>(jo.ToString(), SpecifiedSubclassConversion);
-
                 case nameof(AzurePipelineArtifacts):
                     return JsonConvert.DeserializeObject<AzurePipelineArtifacts>(jo.ToString(), SpecifiedSubclassConversion);
-
                 case nameof(AzureUniversalPackages):
                     return JsonConvert.DeserializeObject<AzureUniversalPackages>(jo.ToString(), SpecifiedSubclassConversion);
-
                 case nameof(GithubPrivateRepos):
                     return JsonConvert.DeserializeObject<GithubPrivateRepos>(jo.ToString(), SpecifiedSubclassConversion);
                 case nameof(AzureBlob):
@@ -41,12 +38,13 @@ namespace PlatformTools.Modules
                 case nameof(GitlabJobArtifacts):
                     return JsonConvert.DeserializeObject<GitlabJobArtifacts>(jo.ToString(),
                         SpecifiedSubclassConversion);
+                case nameof(Artifactory.Artifactory):
+                    return JsonConvert.DeserializeObject<Artifactory.Artifactory>(jo.ToString(), SpecifiedSubclassConversion);
                 case nameof(Local):
                     return JsonConvert.DeserializeObject<Local>(jo.ToString(), SpecifiedSubclassConversion);
                 default:
                     throw new TypeLoadException($"Unknown module source: {sourceName}");
             }
-            throw new NotImplementedException();
         }
 
         public override bool CanWrite
